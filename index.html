@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Orbiteez - The Beginning</title>
+    <script src="./libs/phaser.js"></script>
+  </head>
+  <body>
+    <script>
+      var config = {
+        type: Phaser.AUTO,
+        width: 896,
+        height: 414,
+        backgroundColor: "#eee",
+        physics: {
+          default: "arcade",
+          arcade: {
+            gravity: { y: 300 },
+            debug: false,
+          },
+        },
+        scene: {
+          preload: preload,
+          create: create,
+          update: update,
+        },
+      };
+
+      var sky;
+      var clouds;
+      var bird;
+
+      var score = 100;
+      var scoreText;
+
+      var graphics;
+      var orbit;
+      var handle;
+
+      var game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.image("sky", "./assets/sky.png");
+        this.load.image("cloud", "./assets/cloud.png");
+        this.load.image("bird", "./assets/bird.png");
+      }
+
+      function create() {
+        this.add.image(448, 207, "sky");
+
+        clouds = this.physics.add.group({ allowGravity: false });
+        clouds.create(340, 130, "cloud");
+        clouds.create(520, 180, "cloud");
+        clouds.create(790, 280, "cloud");
+        clouds.create(180, 270, "cloud");
+
+        clouds.children.iterate(function (child) {
+          child.setVelocityX(Phaser.Math.Between(-40, -10));
+        });
+
+        orbit = new Phaser.Curves.Path(200, 100).circleTo(40, true);
+        graphics = this.add.graphics();
+        graphics.lineStyle(1, 0x222222, 1);
+        orbit.draw(graphics);
+
+        handle = new Phaser.Geom.Circle(160, 100, 5);
+        graphics = this.add.graphics({ fillStyle: { color: 0x874f33 } });
+        graphics.fillCircleShape(handle);
+
+        // https://phaser.io/examples/v3/view/paths/followers/change-path
+        bird = this.add.follower(orbit, 0, 0, "bird");
+        bird.startFollow({
+          positionOnPath: true,
+          duration: 2000,
+          repeat: -1,
+          rotateToPath: true,
+          rotationOffset: 90,
+        });
+
+        scoreText = this.add.text(786, 16, "Score: 100", {
+          fontSize: "16px",
+          fill: "#222",
+        });
+      }
+
+      function update() {}
+    </script>
+  </body>
+</html>

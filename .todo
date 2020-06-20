@@ -1,0 +1,10 @@
+Immediate next steps
+
+Game
+
+- Add keyboard "Space" action to make player leave the orbit in a straight line
+- Make clouds come from the right side after disappearing on the left
+
+Project
+
+- Look up how to add TypeScript to the project
